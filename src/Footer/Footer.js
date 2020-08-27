@@ -1,9 +1,13 @@
 import React from 'react'
 import './Footer.css'
 
-const Footer = () => {
+const Footer = (prop) => {
+    const {selected} = prop
+
     return (
-        <div>Footer</div>
+        <div>
+            {selected.join(',')}
+        </div>
     )
 }
 
