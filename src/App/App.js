@@ -1,9 +1,16 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import Main from "../Main";
 import Container from '@material-ui/core/Container';
-import './App.scss'
+import './App.scss';
+import { fetchPost } from '../actions'
+import { connect } from 'react-redux'
 
-const App = () => {
+const App = ({fetchPost}) => {
+
+    useEffect(() => {
+        fetchPost()
+    }, [])
+
     return (
         <div>
             <Container fixed>
@@ -13,4 +20,12 @@ const App = () => {
     )
 }
 
-export default App
+const mapStateToProps = state => ({
+    state: state
+})
+
+const mapDispatcherToProps = dispatch => ({
+    fetchPost: () => dispatch(fetchPost())
+})
+
+export default connect(mapStateToProps, mapDispatcherToProps)(App)
