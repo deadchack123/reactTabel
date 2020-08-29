@@ -1,4 +1,5 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
+import {useStore} from "react-redux";
 import './Main.css'
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -12,15 +13,6 @@ import Header from "../Header";
 import ToolBar from "../ToolBar";
 import Footer from "../Footer";
 
-function createData(name, secondName, age) {
-    return { name, secondName, age };
-}
-
-const rows = [
-    createData('Вася', 'Пупкин', 18),
-    createData('Иван', 'Иванов', 25),
-    createData('ХЗ как', 'Назвать', 16)
-];
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -76,9 +68,16 @@ const useStyles = makeStyles((theme) => ({
 
 const Main = () => {
     const classes = useStyles();
-    const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('name');
-    const [selected, setSelected] = React.useState([]);
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('name');
+    const [selected, setSelected] = useState([]);
+    const [rows, setRows] = useState([])
+    const store = useStore()
+    const {usersTabel} = store.getState()
+
+    useEffect(() => {
+        setRows(usersTabel)
+    }, [usersTabel])
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -117,6 +116,13 @@ const Main = () => {
 
 
     const isSelected = (name) => selected.indexOf(name) !== -1;
+
+    if (!rows.length) {
+        return (
+            <div>Загрузка</div>
+        )
+    }
+
     return (
         <div className={classes.root}>
             <Paper className={classes.paper}>
